@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"github.com/blakelead/lodr/internal/loader"
 )
 
 func TestJsonFile(t *testing.T) {
@@ -49,13 +51,18 @@ func TestEnv(t *testing.T) {
 	}
 	var tc testConfig
 
-	os.Setenv("ENV_STRING_PARAM", "env_string_param")
-	os.Setenv("ENV_INT_PARAM", "4")
-	os.Setenv("ENV_FLOAT_PARAM", "4.1234")
-	os.Setenv("ENV_TIME_PARAM", "10s")
-	os.Setenv("ENV_BOOL_PARAM", "true")
+	os.Setenv("TEST_ENV_STRING_PARAM", "env_string_param")
+	os.Setenv("TEST_ENV_INT_PARAM", "4")
+	os.Setenv("TEST_ENV_FLOAT_PARAM", "4.1234")
+	os.Setenv("TEST_ENV_TIME_PARAM", "10s")
+	os.Setenv("TEST_ENV_BOOL_PARAM", "true")
 
-	Load(&tc).Env()
+	opts := &loader.EnvOptions{
+		Prefix:     "TEST",
+		ProcessAll: false,
+	}
+
+	Load(&tc).Env(opts)
 	if tc.StringParam != "env_string_param" {
 		t.Errorf("Should be env_string_param, is %s", tc.StringParam)
 	}

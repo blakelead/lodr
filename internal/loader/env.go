@@ -53,7 +53,7 @@ func unmarshalEnvFromTags(obj reflect.Value, prefix string) {
 		for i := 0; i < objType.NumField(); i++ {
 			if name, ok := obj.Type().Field(i).Tag.Lookup("env"); ok {
 				if prefix != "" {
-					prefix = prefix + "_"
+					prefix = strings.ToUpper(prefix) + "_"
 				}
 				if val, ok := os.LookupEnv(prefix + name); ok {
 					yaml.Unmarshal([]byte(val), obj.Field(i).Addr().Interface())

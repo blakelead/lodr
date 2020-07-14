@@ -30,8 +30,8 @@ func (c *Config) File(filename string) *Config {
 }
 
 // Env func
-func (c *Config) Env() *Config {
-	err := loader.LoadEnv(&c.object, &loader.EnvOptions{})
+func (c *Config) Env(opts *loader.EnvOptions) *Config {
+	err := loader.LoadEnv(&c.object, opts)
 	if err != nil {
 		c.errors = append(c.errors, err.Error())
 	}
