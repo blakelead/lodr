@@ -12,14 +12,11 @@ type Config struct {
 	errors []string
 }
 
-// New creates an empty Config object
-func New() *Config {
-	return &Config{}
-}
-
 // Load func
-func (c *Config) Load(in interface{}) *Config {
-	c.object = in
+func Load(in interface{}) *Config {
+	c := &Config{
+		object: in,
+	}
 	return c
 }
 
