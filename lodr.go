@@ -4,7 +4,7 @@
 //
 // Example:
 //
-// ```yaml
+// ```
 // # config.yaml
 // name: mydb
 // db:
@@ -14,7 +14,7 @@
 //   tls: true
 // ```
 //
-// ```go
+// ```
 // package main
 //
 // import (
@@ -53,7 +53,7 @@
 // }
 // ```
 //
-// ```bash
+// ```
 // > MY_APP_DB_PASSWORD=pass go run main.go --name the_db
 // the_db
 // pass
