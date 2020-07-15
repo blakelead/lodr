@@ -11,15 +11,15 @@ import (
 func LoadCmd(obj interface{}) {
 	objValue := reflect.ValueOf(obj)
 	cmds := make(map[string]interface{})
-	createFlags(objValue, cmds)
+	createFlagsFromTags(objValue, cmds)
 	flag.Parse()
 	unmarshalCmd(objValue, cmds)
 }
 
-func createFlags(obj reflect.Value, cmds map[string]interface{}) {
+func createFlagsFromTags(obj reflect.Value, cmds map[string]interface{}) {
 	switch obj.Kind() {
 	case reflect.Ptr, reflect.Interface:
-		createFlags(obj.Elem(), cmds)
+		createFlagsFromTags(obj.Elem(), cmds)
 	case reflect.Struct:
 		objType := obj.Type()
 		for i := 0; i < objType.NumField(); i++ {
@@ -38,7 +38,7 @@ func createFlags(obj reflect.Value, cmds map[string]interface{}) {
 					cmds[name] = flag.Duration(name, val, "")
 				}
 			}
-			createFlags(obj.Field(i), cmds)
+			createFlagsFromTags(obj.Field(i), cmds)
 		}
 	}
 }

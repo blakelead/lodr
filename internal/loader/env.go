@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/blakelead/lodr/internal/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -34,10 +35,12 @@ func unmarshalEnv(obj reflect.Value, prefix string) {
 	case reflect.Struct:
 		objType := obj.Type()
 		for i := 0; i < objType.NumField(); i++ {
-			unmarshalEnv(obj.Field(i), fmt.Sprintf("%s.%s", prefix, objType.Field(i).Name))
+			fieldName := utils.SplitCamelCase(objType.Field(i).Name, "_")
+			unmarshalEnv(obj.Field(i), fmt.Sprintf("%s.%s", prefix, fieldName))
 		}
 	default:
 		envVar := strings.ReplaceAll(strings.Trim(prefix, "."), ".", "_")
+		fmt.Println(envVar)
 		if val, ok := os.LookupEnv(strings.ToUpper(envVar)); ok {
 			yaml.Unmarshal([]byte(val), obj.Addr().Interface())
 		}

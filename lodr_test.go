@@ -87,19 +87,19 @@ func TestEnvWithPrefix(t *testing.T) {
 
 func TestEnvWithProcessAll(t *testing.T) {
 	type testConfig struct {
-		StringParam string        `env:"STRING_PARAM"`
-		IntParam    int           `env:"INT_PARAM"`
-		FloatParam  float64       `env:"FLOAT_PARAM"`
-		TimeParam   time.Duration `env:"TIME_PARAM"`
-		BoolParam   bool          `env:"BOOL_PARAM"`
+		StringParam string        `env:"STRINGPARAM"`
+		IntParam    int           `env:"INTPARAM"`
+		FloatParam  float64       `env:"FLOATPARAM"`
+		TimeParam   time.Duration `env:"TIMEPARAM"`
+		BoolParam   bool          `env:"BOOLPARAM"`
 	}
 	var tc testConfig
 
-	os.Setenv("STRINGPARAM", "env_string_param")
-	os.Setenv("INTPARAM", "4")
-	os.Setenv("FLOATPARAM", "4.1234")
-	os.Setenv("TIMEPARAM", "10s")
-	os.Setenv("BOOLPARAM", "true")
+	os.Setenv("STRING_PARAM", "env_string_param")
+	os.Setenv("INT_PARAM", "4")
+	os.Setenv("FLOAT_PARAM", "4.1234")
+	os.Setenv("TIME_PARAM", "10s")
+	os.Setenv("BOOL_PARAM", "true")
 
 	opts := &EnvOptions{
 		ProcessAll: true,
