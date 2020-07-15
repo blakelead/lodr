@@ -64,7 +64,7 @@ func TestEnvWithPrefix(t *testing.T) {
 		ProcessAll: false,
 	}
 
-	Load(&tc).Env(opts)
+	Load(&tc).EnvWithOptions(opts)
 	if tc.StringParam != "env_string_param" {
 		t.Errorf("Should be env_string_param, is %s", tc.StringParam)
 	}
@@ -105,7 +105,7 @@ func TestEnvWithProcessAll(t *testing.T) {
 		ProcessAll: true,
 	}
 
-	Load(&tc).Env(opts)
+	Load(&tc).EnvWithOptions(opts)
 	if tc.StringParam != "env_string_param" {
 		t.Errorf("Should be env_string_param, is %s", tc.StringParam)
 	}
