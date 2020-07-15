@@ -12,6 +12,13 @@ type Config struct {
 	Error  error
 }
 
+// EnvOptions is a helper object
+// to pass options to the loader
+type EnvOptions struct {
+	Prefix     string
+	ProcessAll bool
+}
+
 // Load func
 func Load(in interface{}) *Config {
 	c := &Config{
@@ -30,8 +37,12 @@ func (c *Config) File(filename string) *Config {
 }
 
 // Env func
-func (c *Config) Env(opts *loader.EnvOptions) *Config {
-	err := loader.LoadEnv(&c.object, opts)
+func (c *Config) Env(opts *EnvOptions) *Config {
+
+	err := loader.LoadEnv(&c.object, &loader.EnvOptions{
+		Prefix:     opts.Prefix,
+		ProcessAll: opts.ProcessAll,
+	})
 	if err != nil {
 		c.Error = fmt.Errorf("%w\n%s", c.Error, err.Error())
 	}

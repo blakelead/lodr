@@ -5,8 +5,6 @@ import (
 	"os"
 	"testing"
 	"time"
-
-	"github.com/blakelead/lodr/internal/loader"
 )
 
 func TestJsonFile(t *testing.T) {
@@ -61,7 +59,7 @@ func TestEnvWithPrefix(t *testing.T) {
 	os.Setenv("TEST_ENV_BOOL_PARAM", "true")
 	os.Setenv("TEST_ENV_NESTED_STRING_PARAM", "env_nested_string_param")
 
-	opts := &loader.EnvOptions{
+	opts := &EnvOptions{
 		Prefix:     "TEST_ENV",
 		ProcessAll: false,
 	}
@@ -103,7 +101,7 @@ func TestEnvWithProcessAll(t *testing.T) {
 	os.Setenv("TIMEPARAM", "10s")
 	os.Setenv("BOOLPARAM", "true")
 
-	opts := &loader.EnvOptions{
+	opts := &EnvOptions{
 		ProcessAll: true,
 	}
 
