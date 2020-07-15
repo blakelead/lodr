@@ -41,13 +41,16 @@ func TestJsonFile(t *testing.T) {
 	}
 }
 
-func TestEnv(t *testing.T) {
+func TestEnvWithPrefix(t *testing.T) {
 	type testConfig struct {
-		StringParam string        `env:"ENV_STRING_PARAM"`
-		IntParam    int           `env:"ENV_INT_PARAM"`
-		FloatParam  float64       `env:"ENV_FLOAT_PARAM"`
-		TimeParam   time.Duration `env:"ENV_TIME_PARAM"`
-		BoolParam   bool          `env:"ENV_BOOL_PARAM"`
+		StringParam string        `env:"STRING_PARAM"`
+		IntParam    int           `env:"INT_PARAM"`
+		FloatParam  float64       `env:"FLOAT_PARAM"`
+		TimeParam   time.Duration `env:"TIME_PARAM"`
+		BoolParam   bool          `env:"BOOL_PARAM"`
+		Nested      struct {
+			StringParam string `env:"NESTED_STRING_PARAM"`
+		} `env:"NESTED_STRUCT"`
 	}
 	var tc testConfig
 
@@ -56,10 +59,52 @@ func TestEnv(t *testing.T) {
 	os.Setenv("TEST_ENV_FLOAT_PARAM", "4.1234")
 	os.Setenv("TEST_ENV_TIME_PARAM", "10s")
 	os.Setenv("TEST_ENV_BOOL_PARAM", "true")
+	os.Setenv("TEST_ENV_NESTED_STRING_PARAM", "env_nested_string_param")
 
 	opts := &loader.EnvOptions{
-		Prefix:     "TEST",
+		Prefix:     "TEST_ENV",
 		ProcessAll: false,
+	}
+
+	Load(&tc).Env(opts)
+	if tc.StringParam != "env_string_param" {
+		t.Errorf("Should be env_string_param, is %s", tc.StringParam)
+	}
+	if tc.IntParam != 4 {
+		t.Errorf("Should be 4, is %d", tc.IntParam)
+	}
+	if tc.FloatParam != 4.1234 {
+		t.Errorf("Should be 4.1234, is %f", tc.FloatParam)
+	}
+	if tc.TimeParam != time.Second*10 {
+		t.Errorf("Should be 10s, is %s", tc.TimeParam)
+	}
+	if tc.BoolParam != true {
+		t.Errorf("Should be true, is %t", tc.BoolParam)
+	}
+	if tc.Nested.StringParam != "env_nested_string_param" {
+		t.Errorf("Should be env_nested_string_param, is %s", tc.Nested.StringParam)
+	}
+}
+
+func TestEnvWithProcessAll(t *testing.T) {
+	type testConfig struct {
+		StringParam string        `env:"STRING_PARAM"`
+		IntParam    int           `env:"INT_PARAM"`
+		FloatParam  float64       `env:"FLOAT_PARAM"`
+		TimeParam   time.Duration `env:"TIME_PARAM"`
+		BoolParam   bool          `env:"BOOL_PARAM"`
+	}
+	var tc testConfig
+
+	os.Setenv("STRINGPARAM", "env_string_param")
+	os.Setenv("INTPARAM", "4")
+	os.Setenv("FLOATPARAM", "4.1234")
+	os.Setenv("TIMEPARAM", "10s")
+	os.Setenv("BOOLPARAM", "true")
+
+	opts := &loader.EnvOptions{
+		ProcessAll: true,
 	}
 
 	Load(&tc).Env(opts)

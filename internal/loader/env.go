@@ -37,8 +37,8 @@ func unmarshalEnv(obj reflect.Value, prefix string) {
 			unmarshalEnv(obj.Field(i), fmt.Sprintf("%s.%s", prefix, objType.Field(i).Name))
 		}
 	default:
-		env := formatEnv(prefix)
-		if val, ok := os.LookupEnv(env); ok {
+		envVar := strings.ReplaceAll(strings.Trim(prefix, "."), ".", "_")
+		if val, ok := os.LookupEnv(strings.ToUpper(envVar)); ok {
 			yaml.Unmarshal([]byte(val), obj.Addr().Interface())
 		}
 	}
@@ -52,18 +52,15 @@ func unmarshalEnvFromTags(obj reflect.Value, prefix string) {
 		objType := obj.Type()
 		for i := 0; i < objType.NumField(); i++ {
 			if name, ok := obj.Type().Field(i).Tag.Lookup("env"); ok {
+				envVar := name
 				if prefix != "" {
-					prefix = strings.ToUpper(prefix) + "_"
+					envVar = prefix + "_" + envVar
 				}
-				if val, ok := os.LookupEnv(prefix + name); ok {
+				if val, ok := os.LookupEnv(strings.ToUpper(envVar)); ok {
 					yaml.Unmarshal([]byte(val), obj.Field(i).Addr().Interface())
 				}
 			}
 			unmarshalEnvFromTags(obj.Field(i), prefix)
 		}
 	}
-}
-
-func formatEnv(prefix string) string {
-	return strings.ToUpper(strings.ReplaceAll(strings.Trim(prefix, "."), ".", "_"))
 }
