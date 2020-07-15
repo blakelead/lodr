@@ -9,7 +9,7 @@ import (
 // Config struct
 type Config struct {
 	object interface{}
-	errors []string
+	Error  error
 }
 
 // Load func
@@ -24,7 +24,7 @@ func Load(in interface{}) *Config {
 func (c *Config) File(filename string) *Config {
 	err := loader.LoadFile(filename, &c.object)
 	if err != nil {
-		c.errors = append(c.errors, err.Error())
+		c.Error = fmt.Errorf("%w\n%s", c.Error, err.Error())
 	}
 	return c
 }
@@ -33,7 +33,7 @@ func (c *Config) File(filename string) *Config {
 func (c *Config) Env(opts *loader.EnvOptions) *Config {
 	err := loader.LoadEnv(&c.object, opts)
 	if err != nil {
-		c.errors = append(c.errors, err.Error())
+		c.Error = fmt.Errorf("%w\n%s", c.Error, err.Error())
 	}
 	return c
 }
@@ -42,12 +42,4 @@ func (c *Config) Env(opts *loader.EnvOptions) *Config {
 func (c *Config) Cmd() *Config {
 	loader.LoadCmd(&c.object)
 	return c
-}
-
-// Run func
-func (c *Config) Run() error {
-	if len(c.errors) != 0 {
-		return fmt.Errorf("%v", c.errors)
-	}
-	return nil
 }
